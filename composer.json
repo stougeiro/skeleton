@@ -1,0 +1,32 @@
+{
+    "name": "stougeiro/skeleton",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "STOUGEIRO",
+            "email": "sourcerer@sidneytougeiro.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "STDW\\": "src/",
+            "STDW\\Providers\\": "providers/",
+            "App\\": "app/"
+        },
+        "files": [
+            "src/functions.php",
+            "src/stdw.php"
+        ]
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "stougeiro/contract": "0.5.2",
+        "stougeiro/container-contract": "0.1.0",
+        "stougeiro/cache-contract": "0.1.0",
+        "stougeiro/container": "0.1.0",
+        "stougeiro/listobject": "0.1.0",
+        "stougeiro/support": "0.1.0",
+        "stougeiro/schema": "0.1.0"
+    }
+}

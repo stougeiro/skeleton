@@ -1,0 +1,9 @@
+storage/attachments/*
+storage/cache/*
+storage/log/*
+storage/session/*
+storage/temp/*
+
+vendor/*
+
+!.gitkeep
