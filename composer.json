@@ -19,7 +19,7 @@
             "src/stdw.php"
         ]
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "stougeiro/contract": "0.5.2",
         "stougeiro/container-contract": "0.1.0",
