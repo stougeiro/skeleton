@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-    use STDW\Http\Routing\Router;
+    use STDW\Http\Routing\Contract\RouteInterface;
     use STDW\Database\Database;
 
 
     if ( ! function_exists('router'))
     {
-        function router(): Router
+        function router(): RouteInterface
         {
-            return app()->make(Router::class);
+            return app()->make(RouteInterface::class);
         }
     }
 
