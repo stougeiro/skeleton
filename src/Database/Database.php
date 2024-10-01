@@ -16,7 +16,7 @@
 
 
             $instance = match($connection) {
-                null => 'default',
+                null => $this->connection,
                 default => $connection,
             };
 
