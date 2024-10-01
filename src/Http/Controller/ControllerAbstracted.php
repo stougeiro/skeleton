@@ -69,7 +69,7 @@
             }
 
 
-            $instance = new $class;
+            $instance = app()->make($class);
             $instance->setParams($route_params);
             $instance->$http_method();
 
