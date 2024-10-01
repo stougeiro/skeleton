@@ -2,26 +2,13 @@
 
     namespace App\Dashboard\Controller;
 
-    use STDW\Http\Controller\ControllerAbstracted;
+    use App\Dashboard\Contract\ModuleControllerAbstracted;
 
 
-    class DashboardController extends ControllerAbstracted
+    class DashboardController extends ModuleControllerAbstracted
     {
-        protected static function filters(array $filters = []): array
-        {
-            return parent::filters( array_merge([
-            ], $filters));
-        }
-
-
-        public function __construct()
-        {
-            parent::__construct();
-        }
-
-
         public function get()
         {
-            echo "Hello World";
+            view()->render('dashboard:helloworld');
         }
     }

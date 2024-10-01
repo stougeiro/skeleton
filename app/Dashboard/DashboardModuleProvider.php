@@ -15,8 +15,13 @@
         ];
 
 
+        public function register(): void
+        { }
+
         public function configure(): void
         {
             router()->map($this->routes);
+
+            view()->setStorage('dashboard', __DIR__.'/resources/view');
         }
     }

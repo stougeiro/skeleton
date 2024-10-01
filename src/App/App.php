@@ -45,6 +45,10 @@
             foreach ($this->providers as $provider) {
                 $this->make($provider)->register();
             }
+
+            foreach ($this->modules as $module) {
+                $this->make($module)->register();
+            }
         }
 
         public function boot(): void
