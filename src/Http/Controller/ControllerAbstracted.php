@@ -10,39 +10,44 @@
     {
         protected static array $filters = [];
 
+        protected static array $parameters = [];
+
         protected static array $acceptedMethods = [
             'get', 'post', 'put', 'delete'
         ];
 
-        protected array $route_params = [];
 
-
-        protected function setParams(array $params): void
+        protected static function acceptedMethods(): array
         {
-            foreach ($params as $param => $value) {
-                $this->route_params[$param] = $value;
-            }
+            return static::$acceptedMethods;
+        }
+
+        protected static function filters(array $filters = []): array
+        {
+            return array_unique( array_merge(static::$filters, $filters));
+        }
+
+        protected static function setParameters(array $parameters): void
+        {
+            static::$parameters = array_merge(static::$parameters, $parameters);
         }
 
 
         public function __construct()
         { }
 
-        public function param(string $param): string
-        {
-            if ( ! in_array($param, array_keys($this->route_params))) {
-                return '';
-            }
 
-            return $this->route_params[$param];
+        protected function parameter(string $parameter): ?string
+        {
+            return static::$parameters[$parameter] ?? null;
         }
 
 
-        public static function run(array $route_params = []): void
+        public static function run(array $parameters = []): void
         {
             $class = get_called_class();
 
-            if ( ! is_a($class, ControllerAbstracted::class, true)) {
+            if ( ! is_subclass_of($class, ControllerAbstracted::class)) {
                 throw ControllerException::invalidController($class);
             }
 
@@ -61,29 +66,16 @@
             $filters = array_unique($class::filters());
 
             foreach ($filters as $filter) {
-                if ( ! is_a($filter, FilterAbstracted::class, true)) {
+                if ( ! is_subclass_of($filter, FilterAbstracted::class)) {
                     throw FilterException::invalidFilter($filter);
                 }
 
-                (new $filter)($route_params);
+                (app()->make($filter))($parameters);
             }
 
 
-            $instance = app()->make($class);
-            $instance->setParams($route_params);
-            $instance->$http_method();
+            $class::setParameters($parameters);
 
-            unset($instance);
-        }
-
-
-        protected static function acceptedMethods(): array
-        {
-            return static::$acceptedMethods;
-        }
-
-        protected static function filters(array $filters = []): array
-        {
-            return array_unique( array_merge(static::$filters, $filters));
+            (app()->make($class))->$http_method();
         }
     }

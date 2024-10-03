@@ -5,7 +5,7 @@
     use STDW\Contract\ServiceProviderAbstracted;
     use STDW\Http\Routing\Contract\ParserInterface;
     use STDW\Http\Routing\Contract\RouteCollectionInterface;
-    use STDW\Http\Routing\Contract\RouteInterface;
+    use STDW\Http\Routing\Contract\RouterInterface;
     use STDW\Http\Routing\Parser;
     use STDW\Http\Routing\RouteCollection;
     use STDW\Http\Routing\Router;
@@ -17,7 +17,7 @@
         {
             $this->app->singleton(ParserInterface::class, Parser::class);
             $this->app->singleton(RouteCollectionInterface::class, RouteCollection::class);
-            $this->app->singleton(RouteInterface::class, Router::class);
+            $this->app->singleton(RouterInterface::class, Router::class);
         }
 
         public function boot(): void

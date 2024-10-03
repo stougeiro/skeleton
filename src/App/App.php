@@ -5,7 +5,8 @@
     use STDW\Contract\AppAbstracted;
     use STDW\Container\Contract\ContainerInterface;
     use STDW\Container\Contract\ContainerUtilsTrait;
-    use Exception;
+    use STDW\Http\Routing\Exception\RouteNotFoundException;
+    use Throwable;
 
 
     class App extends AppAbstracted
@@ -85,9 +86,13 @@
                 
                 $this->terminate();
             }
-            catch(Exception $e)
+            catch(RouteNotFoundException $e)
             {
-                debug($e);
+                // todo
+            }
+            catch(Throwable $e)
+            {
+                // todo
             }
         }
     }

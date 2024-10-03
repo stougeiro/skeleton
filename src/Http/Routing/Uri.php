@@ -10,14 +10,23 @@
         use ParserTrait;
 
 
-        public static function get(): array
+        public string $uri;
+
+        public int $parts;
+
+
+        public function __construct(string $uri, int $parts)
+        {
+            $this->uri = $uri;
+            $this->parts = $parts;
+        }
+
+
+        public static function get(): Uri
         {
             $uri = static::sanitize( request_uri());
             $parts = static::count($uri);
 
-            return compact(
-                'uri',
-                'parts',
-            );
+            return new Uri($uri, $parts);
         }
     }

@@ -28,23 +28,18 @@
     {
         function filter_object(false|object|null $object, array $properties): false|object
         {
-            $i = 0;
-            $c = count($properties);
             $new = new stdClass;
 
-            if ( ! is_object($object) || ! count( get_object_vars($object))) {
+            if ( ! is_object($object)) {
                 return false;
             }
 
-            foreach ($object as $property => $value) {
-                if (in_array($property, $properties)) {
-                    $new->{$property} = $value;
-                    $i++;
+            foreach ($properties as $property) {
+                if ( ! property_exists($object, $property)) {
+                    return false;
                 }
 
-                if ($i == $c) {
-                    break;
-                }
+                $new->{$property} = $object->{$property};
             }
 
             return $new;

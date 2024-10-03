@@ -3,8 +3,9 @@
     namespace STDW\Http\Routing;
 
     use STDW\Http\Routing\Contract\RouteCollectionInterface;
+    use STDW\Http\Routing\Contract\ParserInterface;
     use STDW\Http\Routing\Exception\RouteException;
-    use STDW\Http\Routing\Exception\RouteNotFoundException;
+    use STDW\Cache\Contract\CacheInterface;
     use Throwable;
 
 
@@ -14,12 +15,19 @@
 
         private string $basePath = '/';
 
+        private bool $caching = false;
+
 
         public function __construct(
-            protected Parser $parser)
+            protected ParserInterface $parser,
+            protected CacheInterface $cache)
         {
             try {
                 $this->basePath = config('routing.base_path');
+            } catch (Throwable $e) { }
+
+            try {
+                $this->caching = config('routing.caching');
             } catch (Throwable $e) { }
         }
 
@@ -36,6 +44,10 @@
 
         public function map(array $routemaps, string $prefix = ''): void
         {
+            if ($this->caching && $this->cache->has('routes')) {
+                return;
+            }
+
             foreach ($routemaps as $route => $mix) {
                 if (is_string($mix)) {
                     $this->add($prefix.'/'.$route, $mix);
@@ -45,39 +57,6 @@
                     throw RouteException::invalidRouteMap($mix);
                 }
             }
-        }
-
-        public function match(array $uri): array
-        {
-            if ( ! isset($this->routes[$uri['parts']])) {
-                goto notfound;
-            }
-
-
-            $match = false;
-            $routes = array_values($this->routes[$uri['parts']]);
-
-            foreach ($routes as $route) {
-                if (preg_match($route['route'], $uri['uri'], $variables)) {
-                    $match = true; break;
-                }
-            }
-
-            if ($match) {
-                return [
-                    'uri' => $uri['uri'],
-                    'parts' => $uri['parts'],
-                    'map' => $route['map'],
-                    'route' => $route['route'],
-                    'controller' => $route['controller'],
-                    'variables' => array_filter($variables, 'is_string', ARRAY_FILTER_USE_KEY),
-                ];
-            }
-
-
-            notfound:
-
-            throw new RouteNotFoundException($uri['uri']);
         }
 
 

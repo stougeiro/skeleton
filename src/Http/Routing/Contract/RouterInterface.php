@@ -3,7 +3,7 @@
     namespace STDW\Http\Routing\Contract;
 
 
-    interface RouteInterface extends RouteCollectionInterface
+    interface RouterInterface extends RouteCollectionInterface
     {
         public function listen(): void;
     }
