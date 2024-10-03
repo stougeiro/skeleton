@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-    use App\Dashboard\DashboardModuleProvider;
+    use App\Hello\HelloModuleProvider;
 
 
     return
     [
-        DashboardModuleProvider::class,
+        HelloModuleProvider::class,
     ];

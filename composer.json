@@ -23,12 +23,11 @@
     "minimum-stability": "stable",
     "require": {
         "stougeiro/contract": "0.6.0",
-        "stougeiro/container-contract": "0.1.0",
-        "stougeiro/cache-contract": "0.1.0",
         "stougeiro/container": "0.1.0",
+        "stougeiro/cache": "0.7.0",
+        "stougeiro/view": "0.8.0",
         "stougeiro/listobject": "0.1.0",
-        "stougeiro/support": "0.2.0",
         "stougeiro/schema": "0.1.0",
-        "stougeiro/view": "0.7.1"
+        "stougeiro/support": "0.3.0"
     }
 }

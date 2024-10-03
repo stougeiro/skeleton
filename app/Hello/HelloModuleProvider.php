@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-    namespace App\Dashboard;
+    namespace App\Hello;
 
     use STDW\Contract\ModuleProviderAbstracted;
 
-    use App\Dashboard\Controller\DashboardController;
+    use App\Hello\Controller\HelloController;
 
 
-    class DashboardModuleProvider extends ModuleProviderAbstracted
+    class HelloModuleProvider extends ModuleProviderAbstracted
     {
         protected array $routes =
         [
-            '/' => DashboardController::class,
+            '/' => HelloController::class,
         ];
 
 
@@ -22,6 +22,6 @@
         {
             router()->map($this->routes);
 
-            view()->setStorage('dashboard', __DIR__.'/resources/view');
+            view()->setStorage('hello', __DIR__.'/resources/view');
         }
     }

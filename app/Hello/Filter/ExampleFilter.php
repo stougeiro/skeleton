@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-    namespace App\Dashboard\Filter;
+    namespace App\Hello\Filter;
 
     use STDW\Http\Filter\FilterAbstracted;
 

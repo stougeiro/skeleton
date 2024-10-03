@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-    namespace App\Dashboard\Contract;
+    namespace App\Hello\Contract;
 
     use STDW\Http\Controller\ControllerAbstracted;
-    use App\Dashboard\Filter\ExampleFilter;
+    use App\Hello\Filter\ExampleFilter;
 
 
     abstract class ModuleControllerAbstracted extends ControllerAbstracted
