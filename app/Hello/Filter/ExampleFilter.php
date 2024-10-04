@@ -7,6 +7,6 @@
 
 	final class ExampleFilter extends FilterAbstracted
 	{
-        public function __invoke(array $params): void
+        public function __invoke(array $params = []): void
         { }
     }
