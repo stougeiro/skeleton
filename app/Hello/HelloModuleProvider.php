@@ -22,6 +22,6 @@
         {
             router()->map($this->routes);
 
-            view()->setStorage('hello', __DIR__.'/resources/view');
+            view()->setStorage('hello', __DIR__.'/resources/view/');
         }
     }

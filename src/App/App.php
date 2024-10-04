@@ -88,11 +88,11 @@
             }
             catch(RouteNotFoundException $e)
             {
-                // todo
+                header('404', response_code: 404);
             }
             catch(Throwable $e)
             {
-                // todo
+                throw $e;
             }
         }
     }
