@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a43022862b7abaaabe1300c8277ff4f",
+    "content-hash": "3e676684149bd74b20c32b5013f50fe7",
     "packages": [
         {
             "name": "psr/container",
@@ -196,16 +196,16 @@
         },
         {
             "name": "stougeiro/container",
-            "version": "v0.1.0",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stougeiro/container.git",
-                "reference": "f43b3f0cd5f8fbe6fa6d71b47ac926b27abbd233"
+                "reference": "4d480a22e04d28f57b921de24124b3e781b0e87f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stougeiro/container/zipball/f43b3f0cd5f8fbe6fa6d71b47ac926b27abbd233",
-                "reference": "f43b3f0cd5f8fbe6fa6d71b47ac926b27abbd233",
+                "url": "https://api.github.com/repos/stougeiro/container/zipball/4d480a22e04d28f57b921de24124b3e781b0e87f",
+                "reference": "4d480a22e04d28f57b921de24124b3e781b0e87f",
                 "shasum": ""
             },
             "require": {
@@ -230,9 +230,9 @@
             ],
             "support": {
                 "issues": "https://github.com/stougeiro/container/issues",
-                "source": "https://github.com/stougeiro/container/tree/v0.1.0"
+                "source": "https://github.com/stougeiro/container/tree/v0.2.0"
             },
-            "time": "2024-09-18T22:19:10+00:00"
+            "time": "2024-10-01T01:27:40+00:00"
         },
         {
             "name": "stougeiro/container-contract",
