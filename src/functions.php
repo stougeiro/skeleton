@@ -72,7 +72,7 @@
                 return $var;
             }
 
-            return htmlentities( strip_tags($var));
+            return htmlspecialchars( strip_tags($var), ENT_NOQUOTES, 'UTF-8');;
         }
     }
 

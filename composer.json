@@ -1,7 +1,7 @@
 {
     "name": "stougeiro/skeleton",
     "type": "project",
-    "version": "0.8.2",
+    "version": "0.9.0",
     "license": "MIT",
     "authors": [
         {
@@ -27,7 +27,7 @@
         "stougeiro/cache": "0.7.0",
         "stougeiro/view": "0.8.0",
         "stougeiro/listobject": "0.1.0",
-        "stougeiro/schema": "0.1.0",
+        "stougeiro/schema": "0.4.0",
         "stougeiro/support": "0.3.0"
     }
 }
