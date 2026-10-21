@@ -2,6 +2,15 @@ parameters:
     level: 9
     paths:
         - src
+        - app
+        - provider
+        - database
+    excludePaths:
+        - app/*/View/*
+    ignoreErrors:
+        # env.php is a runtime file (gitignored), absent in a fresh clone
+        - identifier: include.fileNotFound
+          path: src/functions.php
     bootstrapFiles:
-        - vendor/autoload.php
+        - bootstrap/app.php
     tmpDir: %currentWorkingDirectory%/.phpstan
