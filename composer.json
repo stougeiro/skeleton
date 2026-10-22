@@ -36,15 +36,13 @@
     },
     "require": {
         "php": ">=8.2",
-        "stougeiro/container": "^3.0",
+        "stougeiro/container": "^4.0",
         "stougeiro/cache": "^2.0",
-        "stougeiro/pdo-database": "^1.0",
-        "stougeiro/http": "^2.1",
-        "stougeiro/event": "^1.0",
-        "stougeiro/session": "^2.0",
+        "stougeiro/http": "^2.2",
         "stougeiro/view": "^2.0",
-        "stougeiro/support": "^2.0",
-        "stougeiro/router": "^1.0"
+        "stougeiro/router": "^1.0",
+        "stougeiro/immutable": "^2.0",
+        "stougeiro/schema": "^2.0"
     },
     "autoload-dev": {
         "psr-4": {

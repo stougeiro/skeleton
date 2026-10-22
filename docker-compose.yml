@@ -1,0 +1,21 @@
+services:
+  nginx:
+    image: nginx:stable-alpine-slim
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/logs:/var/log/nginx
+      - ./project:/var/www/
+  php:
+    build: ./docker/php
+    container_name: php
+    user: "1000:1000"
+    volumes:
+      - ./project:/var/www/
+      - ./docker/php/logs:/var/log/php
+
+volumes:
+  mysql_data:

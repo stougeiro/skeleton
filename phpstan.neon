@@ -7,10 +7,6 @@ parameters:
         - database
     excludePaths:
         - app/*/View/*
-    ignoreErrors:
-        # env.php is a runtime file (gitignored), absent in a fresh clone
-        - identifier: include.fileNotFound
-          path: src/functions.php
     bootstrapFiles:
         - bootstrap/app.php
     tmpDir: %currentWorkingDirectory%/.phpstan
