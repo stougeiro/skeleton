@@ -3,69 +3,33 @@
 namespace Sourcerer\Http;
 
 use Closure;
-use ReflectionMethod;
 
+use STDW\Contract\Container\ContainerInterface;
+use STDW\Contract\Container\ServiceFactoryInterface;
 use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
 use STDW\Contract\View\ViewManagerInterface;
 
 
 /**
- * Base controller: it receives the response accumulated by the middlewares,
- * answers one method per HTTP verb (405 until a concrete controller overrides
- * the verbs it serves) and resolves its own services from the container.
- *
- * The controller is the final handler of the route chain, so its process()
- * simply stores the request/response pair and delegates to handle().
- *
- * @phpstan-consistent-constructor
+ * Base controller: verbs are derived from public methods of the concrete
+ * controller (own + inherited from app bases), minus methods declared on this
+ * base class, unioned with 'options'. Helpers must be protected or private,
+ * otherwise they become verbs. The constructor is left free for the concrete
+ * controller to use with ServiceFactoryInterface and container::make().
  */
-abstract class ControllerAbstracted implements ControllerInterface
+abstract class ControllerAbstracted implements ControllerInterface, ServiceFactoryInterface
 {
     protected RequestInterface $request;
 
     protected ResponseInterface $response;
 
 
-    /**
-     * @return ResponseInterface
-     */
-    public function get(): ResponseInterface
+    public static function factory(ContainerInterface $container): static
     {
-        return $this->notAllowed();
+        return new static();
     }
 
-    /**
-     * @return ResponseInterface
-     */
-    public function post(): ResponseInterface
-    {
-        return $this->notAllowed();
-    }
-
-    /**
-     * @return ResponseInterface
-     */
-    public function put(): ResponseInterface
-    {
-        return $this->notAllowed();
-    }
-
-    /**
-     * @return ResponseInterface
-     */
-    public function patch(): ResponseInterface
-    {
-        return $this->notAllowed();
-    }
-
-    /**
-     * @return ResponseInterface
-     */
-    public function delete(): ResponseInterface
-    {
-        return $this->notAllowed();
-    }
 
     /**
      * @return ResponseInterface
@@ -74,8 +38,8 @@ abstract class ControllerAbstracted implements ControllerInterface
     {
         return $this->response
             ->withStatus(204)
-            ->withBody(null)
-            ->withHeader('Allow', $this->allowedMethods());
+            ->withBody('')
+            ->withHeader('Allow', $this->allowHeader());
     }
 
     /**
@@ -89,17 +53,34 @@ abstract class ControllerAbstracted implements ControllerInterface
         $this->request = $request;
         $this->response = $response;
 
-        return match (strtolower($this->request->getMethod())) {
-            'get' => $this->get(),
-            'post' => $this->post(),
-            'put' => $this->put(),
-            'patch' => $this->patch(),
-            'delete' => $this->delete(),
-            'options' => $this->options(),
-            default => $this->notAllowed(),
-        };
+        $method = strtolower($this->request->getMethod());
+
+        if ( ! in_array($method, $this->allowedMethods(), true)) {
+            return $this->notAllowed();
+        }
+
+        /** @var callable(): ResponseInterface $handler */
+        $handler = [$this, $method];
+
+        return $handler();
     }
 
+
+    /**
+     * Public methods of the concrete controller (own + inherited from app bases)
+     * minus methods declared on this base class, plus 'options'.
+     *
+     * @return list<string>
+     */
+    protected function allowedMethods(): array
+    {
+        $own = array_diff(
+            array_map('strtolower', get_class_methods(static::class)),
+            array_map('strtolower', get_class_methods(self::class)),
+        );
+
+        return array_values(array_unique([...array_values($own), 'options']));
+    }
 
     /**
      * @return ResponseInterface
@@ -108,27 +89,15 @@ abstract class ControllerAbstracted implements ControllerInterface
     {
         return $this->view('error:notallowed')
             ->withStatus(405)
-            ->withHeader('Allow', $this->allowedMethods());
+            ->withHeader('Allow', $this->allowHeader());
     }
 
     /**
-     * The verbs the concrete controller overrides, in declaration order.
-     *
      * @return string
      */
-    protected function allowedMethods(): string
+    protected function allowHeader(): string
     {
-        $allowed = [];
-
-        foreach (['get', 'post', 'put', 'patch', 'delete', 'options'] as $verb) {
-            $declaring = (new ReflectionMethod($this, $verb))->getDeclaringClass()->getName();
-
-            if ($declaring !== self::class) {
-                $allowed[] = strtoupper($verb);
-            }
-        }
-
-        return implode(', ', $allowed);
+        return implode(', ', array_map('strtoupper', $this->allowedMethods()));
     }
 
     /**

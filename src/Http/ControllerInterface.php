@@ -6,17 +6,12 @@ use STDW\Contract\Http\MiddlewareInterface;
 use STDW\Contract\Http\ResponseInterface;
 
 
+/**
+ * A controller answers the HTTP verbs it exposes as public access methods
+ * ('get', 'post', 'purge', ...) — the framework always answers 'options'.
+ * Helpers must be protected or private, otherwise they become verbs.
+ */
 interface ControllerInterface extends MiddlewareInterface
 {
-    public function get(): ResponseInterface;
-
-    public function post(): ResponseInterface;
-
-    public function put(): ResponseInterface;
-
-    public function patch(): ResponseInterface;
-
-    public function delete(): ResponseInterface;
-
     public function options(): ResponseInterface;
 }

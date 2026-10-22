@@ -11,7 +11,6 @@ use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
 use STDW\Contract\Http\Router\RouterInterface;
 use STDW\Contract\View\ViewManagerInterface;
-use STDW\Http\Handler\RequestHandler;
 use STDW\Http\Middleware\MiddlewareManager;
 
 
@@ -82,8 +81,10 @@ final class RoutingDispatcherMiddleware implements MiddlewareInterface
             $manager->add($middleware);
         }
 
-        $manager->setFinalHandler(new $controller());
+        $handler = $this->container->make($controller);
 
-        return (new RequestHandler($manager))->handle($request, $response);
+        $manager->setFinalHandler($handler);
+
+        return $manager->handle($request, $response);
     }
 }
