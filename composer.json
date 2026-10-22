@@ -37,6 +37,7 @@
     "require": {
         "php": ">=8.2",
         "stougeiro/container": "^4.0",
+        "stougeiro/container-contract": "^4.0",
         "stougeiro/cache": "^2.0",
         "stougeiro/http": "^2.2",
         "stougeiro/view": "^2.0",
