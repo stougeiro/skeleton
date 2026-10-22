@@ -2,7 +2,7 @@
 /.devcontainer/
 
 # Composer
-/vendor/
+/project/vendor/
 composer.lock
 
 # OpenCode
@@ -28,12 +28,10 @@ composer-cache/
 Thumbs.db
 
 # Runtime storage
-/storage/cache/*
-!/storage/cache/.gitkeep
-/storage/session/*
-!/storage/session/.gitkeep
-/storage/temp/*
-!/storage/temp/.gitkeep
+/project/storage/cache/*
+/project/storage/session/*
+/project/storage/temp/*
+
 
 # PHPUnit / Pest
 .phpunit.result.cache

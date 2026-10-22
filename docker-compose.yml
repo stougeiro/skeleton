@@ -1,21 +1,22 @@
 services:
   nginx:
-    image: nginx:stable-alpine-slim
+    image: nginx:alpine
     container_name: nginx
     restart: unless-stopped
     ports:
       - 80:80
     volumes:
+      - ./project:/app:ro
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/nginx/logs:/var/log/nginx
-      - ./project:/var/www/
+    depends_on:
+      - php
   php:
     build: ./docker/php
     container_name: php
     user: "1000:1000"
     volumes:
-      - ./project:/var/www/
+      - ./project:/app:rw
       - ./docker/php/logs:/var/log/php
+      - ./docker/secrets/:/run/secrets/
 
-volumes:
-  mysql_data:
