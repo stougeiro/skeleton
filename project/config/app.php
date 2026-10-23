@@ -3,6 +3,7 @@
 use App\Provider\CacheServiceProvider;
 use App\Provider\ViewServiceProvider;
 use App\Provider\HttpServiceProvider;
+use App\Provider\PipelineServiceProvider;
 use App\Provider\AppServiceProvider;
 
 use App\Error\ErrorModuleProvider;
@@ -17,6 +18,7 @@ return
         CacheServiceProvider::class,
         ViewServiceProvider::class,
         HttpServiceProvider::class,
+        PipelineServiceProvider::class,
         AppServiceProvider::class,
     ],
 
