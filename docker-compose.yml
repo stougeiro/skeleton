@@ -6,17 +6,27 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./project:/app:ro
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./project/public:/app/public:ro
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./docker/nginx/logs:/var/log/nginx
     depends_on:
       - php
+
   php:
-    build: ./docker/php
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
     container_name: php
     user: "1000:1000"
     volumes:
-      - ./project:/app:rw
-      - ./docker/php/logs:/var/log/php
+      - ./project/app:/app/app:ro
+      - ./project/bootstrap:/app/bootstrap:ro
+      - ./project/config:/app/config:ro
+      - ./project/database:/app/database:ro
+      - ./project/provider:/app/provider:ro
+      - ./project/public:/app/public:ro
+      - ./project/src:/app/src:ro
+      - ./project/storage:/app/storage:rw
+      - ./project/env.php:/app/env.php:ro
       - ./docker/secrets/:/run/secrets/
-
+      - ./docker/php/logs:/var/log/php

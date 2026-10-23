@@ -1,0 +1,11 @@
+**/vendor
+**/node_modules
+**/.git
+project/storage
+project/tests
+project/phpunit.xml
+project/phpstan.neon
+docker/nginx/logs
+docker/php/logs
+docker/secrets
+.agents
