@@ -5,12 +5,13 @@ namespace Sourcerer\Http;
 use Closure;
 use RuntimeException;
 
+use Sourcerer\Error\Exception\NotFoundHttpException;
+
 use STDW\Contract\Container\ContainerInterface;
 use STDW\Contract\Http\MiddlewareInterface;
 use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
 use STDW\Contract\Http\Router\RouterInterface;
-use STDW\Contract\View\ViewManagerInterface;
 use STDW\Http\Middleware\MiddlewareManager;
 
 
@@ -51,13 +52,7 @@ final class RoutingDispatcherMiddleware implements MiddlewareInterface
         $route = $router->match($request);
 
         if (is_null($route)) {
-            /** @var ViewManagerInterface $view */
-            $view = $this->container->get(ViewManagerInterface::class);
-
-            return $response
-                ->withStatus(404)
-                ->withHeader('Content-Type', 'text/html; charset=utf-8')
-                ->withBody($view->render('error:notfound'));
+            throw new NotFoundHttpException();
         }
 
         foreach ($route->getVariables() as $name => $value) {
@@ -81,6 +76,7 @@ final class RoutingDispatcherMiddleware implements MiddlewareInterface
             $manager->add($middleware);
         }
 
+        /** @var ControllerInterface $handler */
         $handler = $this->container->make($controller);
 
         $manager->setFinalHandler($handler);

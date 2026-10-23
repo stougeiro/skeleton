@@ -58,15 +58,17 @@ final class RoutingMiddlewareCollection
      */
     public function load(string $module, string $file): void
     {
-        if ( ! file_exists($file)) {
-            throw new RuntimeException("middlewares: file '{$file}' not found");
-        }
-
         if ( ! is_subclass_of($module, ModuleProviderInterface::class)) {
             throw new RuntimeException("middlewares: module '{$module}' is not a module provider");
         }
 
-        $map = include $file;
+        $path = realpath($file);
+
+        if ($path === false) {
+            throw new RuntimeException("middlewares: file '{$file}' not found");
+        }
+
+        $map = include $path;
 
         if ( ! is_array($map)) {
             throw new RuntimeException("middlewares: file '{$file}' must return an array");

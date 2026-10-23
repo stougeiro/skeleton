@@ -4,8 +4,9 @@ namespace Sourcerer\Http;
 
 use Closure;
 
+use Sourcerer\Error\Exception\MethodNotAllowedHttpException;
+
 use STDW\Contract\Container\ContainerInterface;
-use STDW\Contract\Container\ServiceFactoryInterface;
 use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
 use STDW\Contract\View\ViewManagerInterface;
@@ -18,17 +19,11 @@ use STDW\Contract\View\ViewManagerInterface;
  * otherwise they become verbs. The constructor is left free for the concrete
  * controller to use with ServiceFactoryInterface and container::make().
  */
-abstract class ControllerAbstracted implements ControllerInterface, ServiceFactoryInterface
+abstract class ControllerAbstracted implements ControllerInterface
 {
     protected RequestInterface $request;
 
     protected ResponseInterface $response;
-
-
-    public static function factory(ContainerInterface $container): static
-    {
-        return new static();
-    }
 
 
     /**
@@ -87,9 +82,7 @@ abstract class ControllerAbstracted implements ControllerInterface, ServiceFacto
      */
     protected function notAllowed(): ResponseInterface
     {
-        return $this->view('error:notallowed')
-            ->withStatus(405)
-            ->withHeader('Allow', $this->allowHeader());
+        throw new MethodNotAllowedHttpException($this->allowHeader());
     }
 
     /**
