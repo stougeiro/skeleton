@@ -12,6 +12,10 @@ use Sourcerer\Http\ControllerAbstracted;
  */
 final class HelloWorldController extends ControllerAbstracted
 {
+    /** @var list<string> */
+    protected array $allowed = ['get'];
+
+
     /**
      * @return ResponseInterface
      */

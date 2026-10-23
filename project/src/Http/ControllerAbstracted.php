@@ -14,14 +14,21 @@ use Closure;
 
 
 /**
- * Base controller: verbs are derived from public methods of the concrete
- * controller (own + inherited from app bases), minus methods declared on this
- * base class, unioned with 'options'. Helpers must be protected or private,
- * otherwise they become verbs. The constructor is left free for the concrete
- * controller to use with ServiceFactoryInterface and container::make().
+ * Base controller: the verbs are the lowercase names declared in the concrete
+ * controller's $allowed list; 'options' is always answered by the framework.
+ * Nothing is discovered, so helpers keep any name and visibility. The
+ * constructor is left free for the concrete controller to use with
+ * ServiceFactoryInterface and container::make().
  */
 abstract class ControllerAbstracted implements ControllerInterface
 {
+    /**
+     * Verbs the concrete controller answers, without 'options'.
+     *
+     * @var list<string>
+     */
+    protected array $allowed = [];
+
     protected RequestInterface $request;
 
     protected ResponseInterface $response;
@@ -30,7 +37,7 @@ abstract class ControllerAbstracted implements ControllerInterface
     /**
      * @return ResponseInterface
      */
-    public function options(): ResponseInterface
+    final public function options(): ResponseInterface
     {
         $reponse = new EmptyResponse();
 
@@ -45,14 +52,14 @@ abstract class ControllerAbstracted implements ControllerInterface
      * @param Closure $next
      * @return ResponseInterface
      */
-    public function process(RequestInterface $request, ResponseInterface $response, Closure $next): ResponseInterface
+    final public function process(RequestInterface $request, ResponseInterface $response, Closure $next): ResponseInterface
     {
         $this->request = $request;
         $this->response = $response;
 
         $method = strtolower($this->request->getMethod());
 
-        if ( ! in_array($method, $this->allowedMethods(), true)) {
+        if ($method !== 'options' && ! in_array($method, $this->allowed, true)) {
             return $this->notAllowed();
         }
 
@@ -64,25 +71,9 @@ abstract class ControllerAbstracted implements ControllerInterface
 
 
     /**
-     * Public methods of the concrete controller (own + inherited from app bases)
-     * minus methods declared on this base class, plus 'options'.
-     *
-     * @return list<string>
-     */
-    protected function allowedMethods(): array
-    {
-        $own = array_diff(
-            array_map('strtolower', get_class_methods(static::class)),
-            array_map('strtolower', get_class_methods(self::class)),
-        );
-
-        return array_values(array_unique([...array_values($own), 'options']));
-    }
-
-    /**
      * @return ResponseInterface
      */
-    protected function notAllowed(): ResponseInterface
+    final protected function notAllowed(): ResponseInterface
     {
         throw new HttpException(405, 'Method Not Allowed', ['Allow' => $this->allowHeader()]);
     }
@@ -90,9 +81,9 @@ abstract class ControllerAbstracted implements ControllerInterface
     /**
      * @return string
      */
-    protected function allowHeader(): string
+    final protected function allowHeader(): string
     {
-        return implode(', ', array_map('strtoupper', $this->allowedMethods()));
+        return implode(', ', array_map('strtoupper', [...$this->allowed, 'options']));
     }
 
     /**
@@ -102,7 +93,7 @@ abstract class ControllerAbstracted implements ControllerInterface
      * @param array<string, mixed> $data
      * @return ResponseInterface
      */
-    protected function view(string $template, array $data = []): ResponseInterface
+    final protected function view(string $template, array $data = []): ResponseInterface
     {
         /** @var ViewManagerInterface $view */
         $view = container()->get(ViewManagerInterface::class);

@@ -7,9 +7,9 @@ use STDW\Contract\Http\ResponseInterface;
 
 
 /**
- * A controller answers the HTTP verbs it exposes as public access methods
- * ('get', 'post', 'purge', ...) — the framework always answers 'options'.
- * Helpers must be protected or private, otherwise they become verbs.
+ * A controller declares the HTTP verbs it answers in $allowed ('get', 'post',
+ * 'purge', ...) — the framework always answers 'options'. Nothing is
+ * discovered, so helpers keep any name and visibility.
  */
 interface ControllerInterface extends MiddlewareInterface
 {
