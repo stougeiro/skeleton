@@ -12,7 +12,7 @@ use App\HelloWorld\HelloWorldModuleProvider;
 
 return
 [
-    'environment' => env('APP_ENV', 'development'),
+    'environment' => env('environment', 'development'),
 
     'providers' => [
         ErrorServiceProvider::class,

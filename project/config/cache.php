@@ -4,6 +4,8 @@
 return
 [
     'handler' => 'file',
+
     'storage' => CACHE,
+
     'associative' => false,
 ];

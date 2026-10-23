@@ -4,5 +4,6 @@
 return
 [
     'storage' => CACHE,
+
     'extension' => '.php',
 ];
