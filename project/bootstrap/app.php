@@ -7,6 +7,7 @@ const APP = ROOT . 'app/';
 const CONFIG = ROOT . 'config/';
 const STORAGE = ROOT . 'storage/';
 const CACHE = STORAGE . 'cache/';
+const LOG = STORAGE . 'log/';
 const SESSION = STORAGE . 'session/';
 const TEMP = STORAGE . 'temp/';
 
