@@ -23,15 +23,6 @@ use RuntimeException;
  */
 final class RoutingDispatcherMiddleware implements MiddlewareInterface
 {
-    /**
-     * Controllers already validated in this process: the check is made once
-     * per controller, not once per request.
-     *
-     * @var array<string, true>
-     */
-    private array $validated = [];
-
-
     public function __construct(
         private readonly ContainerInterface $container,
         private readonly RoutingMiddlewareCollection $middlewares,
@@ -62,12 +53,8 @@ final class RoutingDispatcherMiddleware implements MiddlewareInterface
         /** @var class-string<ControllerInterface> $controller */
         $controller = $route->getController();
 
-        if ( ! isset($this->validated[$controller])) {
-            if ( ! is_subclass_of($controller, ControllerInterface::class)) {
-                throw new RuntimeException("route: controller '{$controller}' is not a controller");
-            }
-
-            $this->validated[$controller] = true;
+        if ( ! is_subclass_of($controller, ControllerInterface::class)) {
+            throw new RuntimeException("route: controller '{$controller}' is not a controller");
         }
 
         $manager = new MiddlewareManager();

@@ -2,6 +2,7 @@
 
 namespace Sourcerer\Http;
 
+use STDW\Contract\Container\ContainerInterface;
 use STDW\Contract\Http\MiddlewareInterface;
 
 use Sourcerer\Module\ModuleProviderInterface;
@@ -24,24 +25,12 @@ final class RoutingMiddlewareCollection
      */
     private array $modules = [];
 
-    /**
-     * Controller FQCN => its middlewares, already instantiated: the resolution
-     * of a controller is deterministic, so it is made only once per process.
-     *
-     * @var array<string, array<int, MiddlewareInterface>>
-     */
-    private array $resolved = [];
-
-    /**
-     * @var array<int, MiddlewareInterface>|null
-     */
-    private ?array $resolvedGlobals = null;
-
 
     /**
      * @param array<int, class-string<MiddlewareInterface>> $globals
      */
     public function __construct(
+        private readonly ContainerInterface $container,
         private readonly array $globals = [],
     ) { }
 
@@ -49,8 +38,8 @@ final class RoutingMiddlewareCollection
     /**
      * Registers the middleware map of a module.
      *
-     * The map keys are '*' (the whole module) or a controller FQCN (a single
-     * controller); the values are lists of middleware classes.
+     * The map keys are '*' (the whole module) or a controller FQCN of the
+     * module; the values are lists of middleware classes.
      *
      * @param class-string<ModuleProviderInterface> $module The module provider class.
      * @param string $file The file returning the map.
@@ -58,10 +47,6 @@ final class RoutingMiddlewareCollection
      */
     public function load(string $module, string $file): void
     {
-        if ( ! is_subclass_of($module, ModuleProviderInterface::class)) {
-            throw new RuntimeException("middlewares: module '{$module}' is not a module provider");
-        }
-
         $path = realpath($file);
 
         if ($path === false) {
@@ -74,39 +59,29 @@ final class RoutingMiddlewareCollection
             throw new RuntimeException("middlewares: file '{$file}' must return an array");
         }
 
-        $normalized = [];
+        $namespace = $this->namespaceOf($module);
 
-        foreach ($map as $key => $middlewares) {
-            if ( ! is_string($key)) {
-                throw new RuntimeException("middlewares: invalid key '{$key}', expected '*' or a controller FQCN");
+        foreach ($map as $key => $list) {
+            $owned = is_string($key)
+                && str_starts_with($key, $namespace)
+                && is_subclass_of($key, ControllerInterface::class);
+
+            if ($key !== '*' && ! $owned) {
+                throw new RuntimeException("middlewares: invalid key '{$key}', expected '*' or a controller of '{$namespace}'");
             }
 
-            if ( $key !== '*' && ! is_subclass_of($key, ControllerInterface::class)) {
-                throw new RuntimeException("middlewares: invalid key '{$key}', expected '*' or a controller FQCN");
-            }
-
-            if ( ! is_array($middlewares)) {
+            if ( ! is_array($list)) {
                 throw new RuntimeException("middlewares: the value of '{$key}' must be an array");
             }
 
-            $list = [];
-
-            foreach ($middlewares as $middleware) {
-                if ( ! is_string($middleware) || ! is_subclass_of($middleware, MiddlewareInterface::class)) {
+            foreach ($list as $class) {
+                if ( ! is_string($class) || ! is_subclass_of($class, MiddlewareInterface::class)) {
                     throw new RuntimeException("middlewares: the list of '{$key}' must hold middleware class names");
                 }
-
-                /** @var class-string<MiddlewareInterface> $middleware */
-                $list[] = $middleware;
             }
-
-            $normalized[$key] = $list;
         }
 
-        $this->modules[$this->namespaceOf($module)] = $normalized;
-
-        /** The maps changed: the resolution cache is no longer valid. */
-        $this->resolved = [];
+        $this->modules[$namespace] = $map;
     }
 
 
@@ -117,7 +92,7 @@ final class RoutingMiddlewareCollection
      */
     public function globals(): array
     {
-        return $this->resolvedGlobals ??= $this->resolve($this->globals);
+        return $this->resolve($this->globals);
     }
 
 
@@ -130,16 +105,9 @@ final class RoutingMiddlewareCollection
      */
     public function forController(string $controller): array
     {
-        if ( isset($this->resolved[$controller])) {
-            return $this->resolved[$controller];
-        }
-
         $map = $this->mapOf($controller);
 
-        $moduleLevel = $map['*'] ?? [];
-        $controllerLevel = $map[$controller] ?? [];
-
-        return $this->resolved[$controller] = $this->resolve([...$moduleLevel, ...$controllerLevel]);
+        return $this->resolve([...($map['*'] ?? []), ...($map[$controller] ?? [])]);
     }
 
 
@@ -191,7 +159,10 @@ final class RoutingMiddlewareCollection
         $middlewares = [];
 
         foreach (array_unique($classes) as $class) {
-            $middlewares[] = new $class();
+            /** @var MiddlewareInterface $middleware */
+            $middleware = $this->container->make($class);
+
+            $middlewares[] = $middleware;
         }
 
         return $middlewares;
