@@ -11,10 +11,9 @@ use RuntimeException;
 
 
 /**
- * Middlewares of the application, by scope: the globals
- * (config/middlewares.php), the module level ('*') and the controller level
- * (the exact controller key) declared by each module in its
- * Config/middlewares.php.
+ * Middlewares of the application by module scope: the module level ('*') and
+ * the controller level (the exact controller key), declared by each module in
+ * its Config/middlewares.php.
  */
 final class RoutingMiddlewareCollection
 {
@@ -26,12 +25,8 @@ final class RoutingMiddlewareCollection
     private array $modules = [];
 
 
-    /**
-     * @param array<int, class-string<MiddlewareInterface>> $globals
-     */
     public function __construct(
         private readonly ContainerInterface $container,
-        private readonly array $globals = [],
     ) { }
 
 
@@ -86,17 +81,6 @@ final class RoutingMiddlewareCollection
 
 
     /**
-     * The application level middlewares, ready to run.
-     *
-     * @return array<int, MiddlewareInterface>
-     */
-    public function globals(): array
-    {
-        return $this->resolve($this->globals);
-    }
-
-
-    /**
      * The module and controller level middlewares of a controller, ready to
      * run: the module ones ('*') come before the controller ones.
      *
@@ -133,7 +117,6 @@ final class RoutingMiddlewareCollection
         return $map;
     }
 
-
     /**
      * @param class-string $module
      * @return string
@@ -148,7 +131,6 @@ final class RoutingMiddlewareCollection
 
         return substr($module, 0, $position + 1);
     }
-
 
     /**
      * @param array<int, class-string<MiddlewareInterface>> $classes
