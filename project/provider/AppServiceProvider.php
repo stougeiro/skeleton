@@ -2,12 +2,13 @@
 
 namespace App\Provider;
 
-use Sourcerer\Http\RoutingDispatcherMiddleware;
-use Sourcerer\Http\RoutingMiddlewareCollection;
 use STDW\Contract\Container\ContainerInterface;
 use STDW\Contract\Container\ServiceProviderAbstracted;
 use STDW\Contract\Http\MiddlewareInterface;
 use STDW\Contract\Http\MiddlewareManagerInterface;
+
+use Sourcerer\Http\RoutingDispatcherMiddleware;
+use Sourcerer\Http\RoutingMiddlewareCollection;
 
 
 /**
