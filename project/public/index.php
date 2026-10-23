@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 
 use STDW\Http\Request;
-use STDW\Http\Response;
 
 use Sourcerer\Error\ErrorHandler;
 use Sourcerer\Http\Kernel;
@@ -31,24 +30,12 @@ try
 
 catch (Throwable $error)
 {
-    if (class_exists(ErrorHandler::class)) {
-        $response = ErrorHandler::fallback($error, new Response());
-
-        if ( ! headers_sent()) {
-            $response->send();
-        }
-
-        return;
-    }
-
     error_log((string) $error);
 
     if (headers_sent()) {
         return;
     }
 
+    header_remove();
     http_response_code(500);
-    header('Content-Type: text/html; charset=utf-8');
-
-    echo '<h1>Erro interno</h1>';
 }
