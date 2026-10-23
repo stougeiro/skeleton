@@ -3,20 +3,7 @@
 
 return
 [
-    'environment' => config('app.environment', 'development'),
-
     'mode' => 'html', // html | json
-
-    'views' => [
-        400 => 'error:badrequest',
-        403 => 'error:forbidden',
-        404 => 'error:notfound',
-        405 => 'error:notallowed',
-        429 => 'error:manyrequests',
-        500 => 'error:internal',
-    ],
-
-    'types' => [],
 
     'development' => [
         'view' => 'error:development',

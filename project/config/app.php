@@ -1,6 +1,5 @@
 <?php declare(strict_types=1);
 
-use App\Provider\ErrorServiceProvider;
 use App\Provider\CacheServiceProvider;
 use App\Provider\ViewServiceProvider;
 use App\Provider\HttpServiceProvider;
@@ -15,7 +14,6 @@ return
     'environment' => env('environment', 'development'),
 
     'providers' => [
-        ErrorServiceProvider::class,
         CacheServiceProvider::class,
         ViewServiceProvider::class,
         HttpServiceProvider::class,
