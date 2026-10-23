@@ -2,11 +2,11 @@
 
 namespace App\HelloWorld\Middleware;
 
-use Closure;
-
 use STDW\Contract\Http\MiddlewareInterface;
 use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
+
+use Closure;
 
 
 /**

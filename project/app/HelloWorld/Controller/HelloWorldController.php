@@ -2,8 +2,9 @@
 
 namespace App\HelloWorld\Controller;
 
-use Sourcerer\Http\ControllerAbstracted;
 use STDW\Contract\Http\ResponseInterface;
+
+use Sourcerer\Http\ControllerAbstracted;
 
 
 /**
