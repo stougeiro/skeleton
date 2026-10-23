@@ -4,6 +4,7 @@ use Sourcerer\Error\ErrorFallback;
 use Sourcerer\Http\Kernel;
 use STDW\Http\Request;
 
+
 $start = hrtime(true);
 
 try {
@@ -14,7 +15,7 @@ try {
     $kernel->handle(new Request())->send();
     $kernel->terminate();
 
-    if (env('PERF_LOG')) {
+    if (env('PERF_LOG', false)) {
         file_put_contents(
             LOG . 'perf.log',
             sprintf("duration: %.2f ms\n", (hrtime(true) - $start) / 1e6),
