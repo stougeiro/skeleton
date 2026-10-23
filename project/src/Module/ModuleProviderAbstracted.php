@@ -2,10 +2,11 @@
 
 namespace Sourcerer\Module;
 
-use Sourcerer\Http\RoutingMiddlewareCollection;
 use STDW\Contract\Container\ContainerInterface;
 use STDW\Contract\View\AliasManagerInterface;
 use STDW\Contract\Http\Router\RouteCollectionInterface;
+
+use Sourcerer\Http\RoutingMiddlewareCollection;
 
 
 /**

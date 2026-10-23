@@ -2,14 +2,16 @@
 
 namespace Sourcerer\Http;
 
-use Closure;
-
 use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
 use STDW\Contract\View\ViewManagerInterface;
 use STDW\Http\Response\EmptyResponse;
-use Sourcerer\Error\Exception\MethodNotAllowedHttpException;
 use STDW\Http\Response\HtmlResponse;
+
+use Sourcerer\Error\Exception\HttpException;
+
+use Closure;
+
 
 /**
  * Base controller: verbs are derived from public methods of the concrete
@@ -82,7 +84,7 @@ abstract class ControllerAbstracted implements ControllerInterface
      */
     protected function notAllowed(): ResponseInterface
     {
-        throw new MethodNotAllowedHttpException($this->allowHeader());
+        throw new HttpException(405, 'Method Not Allowed', ['Allow' => $this->allowHeader()]);
     }
 
     /**

@@ -2,11 +2,11 @@
 
 namespace Sourcerer\Http;
 
-use RuntimeException;
-
 use STDW\Contract\Http\MiddlewareInterface;
 
 use Sourcerer\Module\ModuleProviderInterface;
+
+use RuntimeException;
 
 
 /**

@@ -2,17 +2,17 @@
 
 namespace Sourcerer\Http;
 
-use Closure;
-use RuntimeException;
-
-use Sourcerer\Error\Exception\NotFoundHttpException;
-
 use STDW\Contract\Container\ContainerInterface;
 use STDW\Contract\Http\MiddlewareInterface;
 use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
 use STDW\Contract\Http\Router\RouterInterface;
 use STDW\Http\Middleware\MiddlewareManager;
+
+use Sourcerer\Error\Exception\HttpException;
+
+use Closure;
+use RuntimeException;
 
 
 /**
@@ -52,7 +52,7 @@ final class RoutingDispatcherMiddleware implements MiddlewareInterface
         $route = $router->match($request);
 
         if (is_null($route)) {
-            throw new NotFoundHttpException();
+            throw new HttpException(404, 'Not Found');
         }
 
         foreach ($route->getVariables() as $name => $value) {

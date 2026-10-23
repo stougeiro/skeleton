@@ -2,9 +2,6 @@
 
 namespace Sourcerer\Http;
 
-use Sourcerer\Error\ErrorFallback;
-use Sourcerer\Error\ErrorHandlerInterface;
-use Sourcerer\Module\ModuleProviderInterface;
 use STDW\Container\ServiceManager;
 use STDW\Contract\Container\ContainerInterface;
 use STDW\Contract\Container\ServiceManagerInterface;
@@ -13,6 +10,11 @@ use STDW\Contract\Http\RequestHandlerInterface;
 use STDW\Contract\Http\RequestInterface;
 use STDW\Contract\Http\ResponseInterface;
 use STDW\Http\Response;
+
+use Sourcerer\Error\ErrorHandler;
+use Sourcerer\Module\ModuleProviderInterface;
+
+use Throwable;
 
 
 /**
@@ -90,15 +92,12 @@ final class Kernel
 
             return $handler->handle($request, $response);
         }
-        catch (\Throwable $error) {
+        catch (Throwable $error) {
             try {
-                /** @var ErrorHandlerInterface $errors */
-                $errors = $this->container->get(ErrorHandlerInterface::class);
-
-                return $errors->handle($error, $request, $response);
+                return (new ErrorHandler())->handle($error, $request, $response);
             }
-            catch (\Throwable $fatal) {
-                return ErrorFallback::response($fatal, $response);
+            catch (Throwable $fatal) {
+                return ErrorHandler::fallback($fatal, $response);
             }
         }
     }
