@@ -1,6 +1,6 @@
 {
     "name": "stougeiro/skeleton",
-    "description": "Aplicação module-based sobre o ecossistema stougeiro.",
+    "description": "",
     "type": "project",
     "minimum-stability": "stable",
     "prefer-stable": true,
