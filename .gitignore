@@ -49,5 +49,6 @@ coverage/
 /build/
 
 !.gitkeep
+
 # Ambiente
-/env.php
+env.php
