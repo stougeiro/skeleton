@@ -1,19 +1,40 @@
 <?php declare(strict_types=1);
 
-$start = hrtime(true);
-
-require_once __DIR__ . '/../bootstrap/app.php';
-
+use Sourcerer\Error\ErrorFallback;
 use Sourcerer\Http\Kernel;
 use STDW\Http\Request;
 
+$start = hrtime(true);
 
-$kernel = Kernel::create();
+try {
+    require_once __DIR__ . '/../bootstrap/app.php';
 
-$kernel->handle(new Request())->send();
-$kernel->terminate();
+    $kernel = Kernel::create();
 
-$end = hrtime(true) - $start;
-$duration = $end / 1e6;
+    $kernel->handle(new Request())->send();
+    $kernel->terminate();
 
-echo "<span> PHP Duration: ". $duration ."ms</span>"; 
+    if (env('PERF_LOG')) {
+        file_put_contents(
+            LOG . 'perf.log',
+            sprintf("duration: %.2f ms\n", (hrtime(true) - $start) / 1e6),
+            FILE_APPEND | LOCK_EX
+        );
+    }
+}
+catch (\Throwable $error) {
+    if (class_exists(ErrorFallback::class)) {
+        ErrorFallback::send($error);
+
+        return;
+    }
+
+    error_log((string) $error);
+
+    if ( ! headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: text/html; charset=utf-8');
+    }
+
+    echo '<h1>Erro interno</h1>';
+}
